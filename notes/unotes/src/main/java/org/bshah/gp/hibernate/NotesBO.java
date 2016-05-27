@@ -15,6 +15,32 @@ import org.hibernate.criterion.Restrictions;
 public class NotesBO 
 {
 	@SuppressWarnings("unchecked")
+	public static List<Notes> getAllUserNotes(int userid)
+	{
+		Session session = null;
+
+		List<Notes> notesList = new ArrayList<Notes>();
+		try
+		{
+			session = HibernateUtils.openSession();
+			User user = UserBO.getUser(userid);
+			notesList = (ArrayList<Notes>) session.createCriteria(Notes.class).add(Restrictions.eq("user", user))
+					.list();
+		}
+		catch (HibernateException e)
+		{
+			e.printStackTrace();
+			throw e;
+		}
+		finally
+		{
+			HibernateUtils.closeSession(session);
+		}
+
+		return notesList;
+	}
+
+	@SuppressWarnings("unchecked")
 	public static Notes getNote(int userid, int noteid)
 	{
 		Session session = null;

@@ -52,4 +52,24 @@ public class UserBO
 		return user;
 	}
 
+	@SuppressWarnings("unchecked")
+	public static List<User> getAllUsers()
+	{
+		Session session = null;
+		List<User> users = new ArrayList<User>();
+		try
+		{
+			session = HibernateUtils.openSession();
+			users = session.createCriteria(User.class).list();
+		} catch (Exception e)
+		{
+			e.printStackTrace();
+			throw e;
+		} finally
+		{
+			HibernateUtils.closeSession(session);
+		}
+		return users;
+	}
+
 }

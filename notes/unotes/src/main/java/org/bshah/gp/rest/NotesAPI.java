@@ -24,4 +24,11 @@ public class NotesAPI
 		return notesList;
 	}
 
+	@GET
+	@Path("/{noteid}")
+	public Notes getUserNotes(@PathParam("userid") int userid, @PathParam("noteid") int noteid)
+	{
+		return NotesBO.getNote(userid, noteid);
+	}
+
 }

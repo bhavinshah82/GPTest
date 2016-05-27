@@ -1,9 +1,15 @@
 package org.bshah.gp.hibernate;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+
 import org.bshah.gp.entity.User;
 import org.bshah.gp.utils.HibernateUtils;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.criterion.Restrictions;
 
 public class UserBO 
 {
@@ -12,7 +18,7 @@ public class UserBO
 		Session session = null;
 		try
 		{
-			session = HibernateUtils.getSessionFactory().openSession();
+			session = HibernateUtils.openSession();
 			Transaction tx = session.beginTransaction();
 			session.save(user);
 			tx.commit();
@@ -22,11 +28,7 @@ public class UserBO
 			throw e;
 		} finally
 		{
-			if (null != session && session.isOpen())
-			{
-				System.out.println("Closing session");
-				session.close();
-			}
+			HibernateUtils.closeSession(session);
 		}
 		return user;
 	}
@@ -37,7 +39,7 @@ public class UserBO
 		User user = null;
 		try
 		{
-			session = HibernateUtils.getSessionFactory().openSession();
+			session = HibernateUtils.openSession();
 			user = (User) session.get(User.class, id);
 		} catch (Exception e)
 		{
@@ -45,11 +47,7 @@ public class UserBO
 			throw e;
 		} finally
 		{
-			if (null != session && session.isOpen())
-			{
-				System.out.println("Closing session");
-				session.close();
-			}
+			HibernateUtils.closeSession(session);
 		}
 		return user;
 	}

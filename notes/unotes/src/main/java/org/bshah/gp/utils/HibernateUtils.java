@@ -6,6 +6,7 @@ import org.hibernate.cfg.Configuration;
 
 public class HibernateUtils
 {
+
 	private static SessionFactory sessionFactory;
 
 	public static SessionFactory getSessionFactory()
@@ -26,5 +27,30 @@ public class HibernateUtils
 			System.err.println("Initial SessionFactory creation failed." + ex);
 			throw ex;
 		}
+
 	}
+
+	public static Session openSession()
+	{
+		if (sessionFactory == null)
+			sessionFactory = getSessionFactory();
+		return sessionFactory.openSession();
+	}
+
+	public static void closeSession(Session session)
+	{
+		try
+		{
+			if (null != session && session.isOpen())
+			{
+				System.out.println("Closing session");
+				session.close();
+			}
+		}
+		catch (Exception ex)
+		{
+			System.out.println("session close Failed");
+		}
+	}
+
 }

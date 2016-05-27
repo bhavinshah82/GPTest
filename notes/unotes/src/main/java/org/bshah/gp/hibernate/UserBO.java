@@ -52,6 +52,29 @@ public class UserBO
 		return user;
 	}
 
+	public static User getUserbyemail(String email)
+	{
+		Session session = null;
+		User user = null;
+		try
+		{
+			session = HibernateUtils.openSession();
+			@SuppressWarnings("unchecked")
+			List<User> userlist =  session.createCriteria(User.class).add(Restrictions.eq("emailId", email)).list();
+			if(userlist.size()==0)
+				return null;
+			else user = userlist.get(0);
+		} catch (Exception e)
+		{
+			e.printStackTrace();
+			throw e;
+		} finally
+		{
+			HibernateUtils.closeSession(session);
+		}
+		return user;
+	}
+
 	@SuppressWarnings("unchecked")
 	public static List<User> getAllUsers()
 	{

@@ -18,6 +18,7 @@ import javax.ws.rs.core.Response;
 import org.bshah.gp.entity.NoteWrapper;
 import org.bshah.gp.entity.Notes;
 import org.bshah.gp.hibernate.NotesBO;
+import org.bshah.gp.utils.Authorizer;
 import org.bshah.gp.utils.RestException;
 
 @Path("user/{userid}/notes")
@@ -25,12 +26,14 @@ import org.bshah.gp.utils.RestException;
 @Consumes(MediaType.APPLICATION_JSON)
 public class NotesAPI {
 
+	private static final String AUTH_KEY = "Authorization"; 
 	
 	public NotesAPI()
 	{}
 	
-	public NotesAPI( @PathParam("userid") String userid)
+	public NotesAPI(@HeaderParam(AUTH_KEY) String authKey, @PathParam("userid") String userid)
 	{
+//		System.out.println("auth key is "+ authKey);
 		int uid;
 		try
 		{
@@ -39,6 +42,10 @@ public class NotesAPI {
 		catch(NumberFormatException e)
 		{
 			throw new RestException(Response.Status.BAD_REQUEST, "Invalid user id");
+		}
+		if(!Authorizer.authorize(authKey, uid))
+		{
+			throw new RestException(Response.Status.UNAUTHORIZED, "Invalid username/password");
 		}
 	}
 

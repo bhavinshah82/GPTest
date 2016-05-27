@@ -1,5 +1,6 @@
 package org.bshah.gp.rest;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.ws.rs.Consumes;
@@ -12,6 +13,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
+import org.bshah.gp.entity.NoteWrapper;
 import org.bshah.gp.entity.Notes;
 import org.bshah.gp.hibernate.NotesBO;
 
@@ -21,17 +23,22 @@ import org.bshah.gp.hibernate.NotesBO;
 public class NotesAPI 
 {
 	@GET
-	public List<Notes> getAllUserNotes(@PathParam("userid") int userid)
+	public List<NoteWrapper> getAllUserNotes(@PathParam("userid") int userid)
 	{
 		List<Notes> notesList = NotesBO.getAllUserNotes(userid);
-		return notesList;
+		List<NoteWrapper> noteWrapperList = new ArrayList<NoteWrapper>();
+		for(Notes note: notesList)
+			noteWrapperList.add(new NoteWrapper(note));
+		return noteWrapperList;
 	}
 
 	@GET
 	@Path("/{noteid}")
-	public Notes getUserNotes(@PathParam("userid") int userid, @PathParam("noteid") int noteid)
+	public NoteWrapper getUserNotes(@PathParam("userid") int userid, @PathParam("noteid") int noteid)
 	{
-		return NotesBO.getNote(userid, noteid);
+
+		NoteWrapper notewrapper = new NoteWrapper(NotesBO.getNote(userid, noteid));
+		return notewrapper;
 	}
 
 	@POST
